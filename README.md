@@ -5,7 +5,7 @@ I regularly take UBikes, and have more than once ran into the issue of an empty 
 ## TODO 📒: 
 
 - [ ] Finish demo before dinnertime (30 minutes)
-- - [ ] Get data from KH gov using Fetch API
-- - [ ] Parse data for stations near me (財政部高雄國稅局, 高雄師範大學(活動中心))
-- - [ ] Display data using HTML
+- - [x] Get data from KH gov using Fetch API
+- - [x] Parse data for stations near me (財政部高雄國稅局, 高雄師範大學(活動中心))
+- - [x] Display data using HTML
 - - [ ] Host on Vercel
