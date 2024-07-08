@@ -1,19 +1,7 @@
+// DECLARE GLOBAL CONSTANTS
 const API_URL = 'https://api.kcg.gov.tw/api/service/Get/b4dd9c40-9027-4125-8666-06bef1756092';
 
-async function getData() {
-    const response = await fetch(API_URL)
-        .then(response => response.json())
-        .then(response => response.data.retVal);
-
-    return response;
-}
-
-const responseData = await getData();
-const relevantData = responseData.filter(station => (station.sna == 'YouBike2.0_財政部高雄國稅局' || station.sna == 'YouBike2.0_高雄師範大學(活動中心)'));
-
-console.log(relevantData)
-
-// set up leaflet map
+// MAP-RELATED CODE
 var map = L.map('map').setView([22.61626, 120.31333], 13);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
@@ -24,9 +12,42 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 map.locate({setView: true, maxZoom: 16});
 
 // query kaohsiung government api
+const allUbikeStations = await getData();
 
-// loop over times in list, check for 3 closest ubike stations
+//
+
+// sort ubike station array by distance of station relative to current location
+
+// take top 3 stations from this list
 
 // add markers for each ubike locations
 
 // add popups to each marker with no. of ubikes
+
+// UTIL FUNCTIONS
+// get measure of difference between two coordinates
+function haversine(latFirst, lonFirst, latSecond, lonSecond) {
+    // Convert degrees to radians
+    const toRadians = angle => angle * (Math.PI / 180);
+
+    const dLat = toRadians(latSecond - latFirst);
+    const dLon = toRadians(lonSecond - lonFirst);
+
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(toRadians(latFirst)) * Math.cos(toRadians(latSecond)) *
+              Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    return distance;
+}
+
+
+// retrieve data from government
+async function getData() {
+    const response = await fetch(API_URL)
+        .then(response => response.json())
+        .then(response => response.data.retVal);
+
+    return response;
+}
