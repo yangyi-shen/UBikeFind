@@ -14,8 +14,19 @@ const relevantData = responseData.filter(station => (station.sna == 'YouBike2.0_
 console.log(relevantData)
 
 // set up leaflet map
-var map = L.map('map').setView([51.505, -0.09], 13);
+var map = L.map('map').setView([22.61626, 120.31333], 13);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
+
+// pan map to user's location
+map.locate({setView: true, maxZoom: 16});
+
+// query kaohsiung government api
+
+// loop over times in list, check for 3 closest ubike stations
+
+// add markers for each ubike locations
+
+// add popups to each marker with no. of ubikes
