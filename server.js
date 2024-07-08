@@ -13,13 +13,9 @@ const relevantData = responseData.filter(station => (station.sna == 'YouBike2.0_
 
 console.log(relevantData)
 
-const stationList = document.getElementById('station-list');
-for (const station of relevantData) {
-    const listItem = document.createElement('li');
-    listItem.className = 'station';
-    listItem.innerHTML = `
-        <h3 class="station-name">Name: ${station.sna}</h3>
-        <p class="station-numbikes">Number of bikes: ${station.sbi_detail.yb2}</p>
-    `;
-    stationList.appendChild(listItem);
-}
+// set up leaflet map
+var map = L.map('map').setView([51.505, -0.09], 13);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+}).addTo(map);
