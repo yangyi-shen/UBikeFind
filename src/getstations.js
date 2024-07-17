@@ -12,7 +12,12 @@ async function getStations() {
         .then(response => response.data.retVal)
         .then(response => response.filter(station => wantedStations.includes(station.sna)))
 
-    return response;
-}
+    const stationList = response.map(station => station = {
+        name: station.sna,
+        coords: [station.lat, station.lng],
+        yb2: station.sbi_detail.yb2,
+        eyb: station.sbi_detail.eyb
+    })
 
-console.log(await getStations());
+    return stationList;
+}
