@@ -53,7 +53,15 @@ body {
     z-index: -1;
 }
 
+#map {
+    height: 300px;
+    width: min(100vw, 600px);
+    margin: 0px auto;
+    border: 0.1px solid black;
+}
+
 .copyright {
     color: var(--base-content-light);
     margin: 0px;
+    margin-top: 16px;
 }
