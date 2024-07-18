@@ -11,7 +11,7 @@ async function getStations() {
     const response = await fetch(apiURL)
         .then(response => response.json())
         .then(response => response.data.retVal)
-        // .then(response => response.filter(station => wantedStations.includes(station.sna)))
+    // .then(response => response.filter(station => wantedStations.includes(station.sna)))
 
     const stationListRaw = response.map(station => station = {
         name: station.sna,
@@ -36,7 +36,10 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
+// get station data
 const stationList = await getStations();
+
+// create markers for each station
 for (const station of stationList) {
     // draw marker on station coords
     const marker = L.marker(station.coords).addTo(map);
@@ -50,17 +53,25 @@ for (const station of stationList) {
 
 // UTILS BELOW
 async function findClosestStations(stationList) {
-    return new Promise((resolve) => {navigator.geolocation.getCurrentPosition((position) => {
-        const coords = [position.coords.latitude, position.coords.longitude];
+    return new Promise((resolve) => {
+        navigator.geolocation.getCurrentPosition((position) => {
+            const coords = [position.coords.latitude, position.coords.longitude];
 
-        const mappedList = stationList.map((station) => {
-            return [station, haversine(coords, station.coords)]
+            // INTERJECT: fly to user location (I know this is messy but I don't want to make a second geolocation call!)
+            map.flyTo(coords, 16, {
+                animate: true,
+                duration: 1.5
+            });
+
+            const mappedList = stationList.map((station) => {
+                return [station, haversine(coords, station.coords)]
+            })
+            mappedList.sort((a, b) => a[1] - b[1])
+            const sortedList = mappedList.map(stationData => stationData[0])
+
+            resolve(sortedList)
         })
-        mappedList.sort((a, b) => a[1] - b[1])
-        const sortedList = mappedList.map(stationData => stationData[0])
-
-        resolve(sortedList)
-    })});
+    });
 }
 
 function haversine(userCoords, locationCoords) {
