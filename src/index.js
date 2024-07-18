@@ -16,8 +16,8 @@ async function getStations() {
     const stationListRaw = response.map(station => station = {
         name: station.sna,
         coords: [station.lat, station.lng],
-        yb2: station.sbi_detail.yb2,
-        eyb: station.sbi_detail.eyb
+        yb2: parseInt(station.sbi_detail.yb2),
+        eyb: parseInt(station.sbi_detail.eyb),
     })
 
     const stationListSorted = await findClosestStations(stationListRaw)
@@ -41,12 +41,16 @@ const stationList = await getStations();
 
 // create markers for each station
 for (const station of stationList) {
+    // create custom icon
+    var customIcon = L.icon({
+        iconUrl: createIcon(station.yb2, station.eyb),
+        iconSize: [40, 40],
+        iconAnchor: [20, 40],
+        popupAnchor: [0, -40]
+    });
+
     // draw marker on station coords
-    const marker = L.marker(station.coords).addTo(map);
-
-    // use dynamic marker sprite w/ inline html
-
-    // put station data in marker
+    const marker = L.marker(station.coords, { icon: customIcon }).addTo(map);
 
     // style popup with easy-on-eyes colors, nice design etc.
 }
@@ -87,4 +91,47 @@ function haversine(userCoords, locationCoords) {
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
     return R * c; // distance in km
+}
+
+function createIcon(yb2, eyb) {
+    var canvas = document.createElement('canvas');
+    canvas.width = 60;
+    canvas.height = 40;
+    var ctx = canvas.getContext('2d');
+
+    // fill color based on bike availability
+    if (yb2 + eyb < 5) {
+        ctx.fillStyle = '#f87171'
+    } else {
+        ctx.fillStyle = '#a3e635'
+    }
+
+    // Draw the main body of the popup
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(60, 0);
+    ctx.lineTo(60, 25);
+    ctx.lineTo(35, 25);
+    ctx.lineTo(30, 35);
+    ctx.lineTo(25, 25);
+    ctx.lineTo(0, 25);
+    ctx.closePath();
+    ctx.fill();
+
+    // Draw a border
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // Add number
+    ctx.scale(1.60, 1);
+    ctx.translate(-11, -0.95);
+    ctx.font = 'bold 16px Arial';
+    ctx.fillStyle = 'black';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(`${yb2}|${eyb}`, 30, 15);
+
+    // Convert to image URL
+    return canvas.toDataURL();
 }
