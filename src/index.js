@@ -1,10 +1,3 @@
-const map = L.map('map').setView([51.505, -0.09], 13);
-
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-}).addTo(map);
-
 // CODE FOR API STUFF HERE
 const apiURL = 'https://api.kcg.gov.tw/api/service/Get/b4dd9c40-9027-4125-8666-06bef1756092';
 const wantedStations = [
@@ -28,4 +21,26 @@ async function getStations() {
     })
 
     return stationList;
+}
+
+// SET UP AND CONFIGURE LEAFLET.JS FEATURES
+const map = L.map('map').setView([22.61626, 120.30033], 13);
+
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+}).addTo(map);
+
+const stationList = await getStations();
+for (const station of stationList) {
+    console.log(station)
+
+    // draw marker on station coords
+    const marker = L.marker(station.coords).addTo(map);
+
+    // use dynamic marker sprite w/ inline html
+
+    // put station data in marker
+
+    // style popup with easy-on-eyes colors, nice design etc.
 }
