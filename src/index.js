@@ -13,14 +13,16 @@ async function getStations() {
         .then(response => response.data.retVal)
         .then(response => response.filter(station => wantedStations.includes(station.sna)))
 
-    const stationList = response.map(station => station = {
+    const stationListRaw = response.map(station => station = {
         name: station.sna,
         coords: [station.lat, station.lng],
         yb2: station.sbi_detail.yb2,
         eyb: station.sbi_detail.eyb
     })
 
-    return stationList;
+    const stationList = findClosestStations(stationListRaw)
+
+    return stationList
 }
 
 // SET UP AND CONFIGURE LEAFLET.JS FEATURES
@@ -44,6 +46,20 @@ for (const station of stationList) {
 }
 
 // UTILS BELOW
+async function findClosestStations(stationList) {
+    navigator.geolocation.getCurrentPosition((position) => {
+        const coords = [position.coords.latitude, position.coords.longitude];
+
+        const mappedList = stationList.map((station) => {
+            return [station, haversine(coords, station.coords)]
+        })
+        mappedList.sort((a, b) => a[1] - b[1])
+        const sortedList = mappedList.map(stationData => stationData[0])
+
+        return sortedList
+    });
+}
+
 function haversine(userCoords, locationCoords) {
     const R = 6371; // earth radius in km
 
