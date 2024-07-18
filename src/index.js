@@ -11,7 +11,7 @@ async function getStations() {
     const response = await fetch(apiURL)
         .then(response => response.json())
         .then(response => response.data.retVal)
-        .then(response => response.filter(station => wantedStations.includes(station.sna)))
+        // .then(response => response.filter(station => wantedStations.includes(station.sna)))
 
     const stationListRaw = response.map(station => station = {
         name: station.sna,
@@ -20,7 +20,10 @@ async function getStations() {
         eyb: station.sbi_detail.eyb
     })
 
-    const stationList = findClosestStations(stationListRaw)
+    const stationListSorted = await findClosestStations(stationListRaw)
+    const stationList = stationListSorted.slice(0, 5);
+
+    console.log(stationList)
 
     return stationList
 }
@@ -47,7 +50,7 @@ for (const station of stationList) {
 
 // UTILS BELOW
 async function findClosestStations(stationList) {
-    navigator.geolocation.getCurrentPosition((position) => {
+    return new Promise((resolve) => {navigator.geolocation.getCurrentPosition((position) => {
         const coords = [position.coords.latitude, position.coords.longitude];
 
         const mappedList = stationList.map((station) => {
@@ -56,8 +59,8 @@ async function findClosestStations(stationList) {
         mappedList.sort((a, b) => a[1] - b[1])
         const sortedList = mappedList.map(stationData => stationData[0])
 
-        return sortedList
-    });
+        resolve(sortedList)
+    })});
 }
 
 function haversine(userCoords, locationCoords) {
