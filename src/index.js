@@ -33,8 +33,6 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 const stationList = await getStations();
 for (const station of stationList) {
-    console.log(station)
-
     // draw marker on station coords
     const marker = L.marker(station.coords).addTo(map);
 
@@ -43,4 +41,20 @@ for (const station of stationList) {
     // put station data in marker
 
     // style popup with easy-on-eyes colors, nice design etc.
+}
+
+// UTILS BELOW
+function haversine(userCoords, locationCoords) {
+    const R = 6371; // earth radius in km
+
+    const [userLat, userLng] = userCoords.map(x => x * Math.PI / 180);
+    const [locationLat, locationLng] = locationCoords.map(x => x * Math.PI / 180);
+
+    const dlat = locationLat - userLat;
+    const dlon = locationLng - userLng;
+
+    const a = Math.sin(dlat / 2) ** 2 + Math.cos(userLat) * Math.cos(locationLat) * Math.sin(dlon / 2) ** 2;
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    return R * c; // distance in km
 }
