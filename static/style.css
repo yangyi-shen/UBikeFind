@@ -82,3 +82,9 @@ footer[lang=en] {
     margin: 0px;
     margin-top: 16px;
 }
+
+@media (max-width: 800px) {
+    #map {
+        height: calc(max(100vh - 300px, 300px));
+    }
+}
