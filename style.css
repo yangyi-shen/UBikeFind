@@ -22,6 +22,15 @@ header[lang=en] {
     display: none;
 }
 
+header[lang=zh] .emphasis {
+    position: relative;
+    display: inline-block;
+    z-index: 1;
+    color: var(--base);
+    font-weight: 800;
+    margin: 0px 5px;
+}
+
 .logo {
     margin: 0px;
     margin-bottom: 12px;
@@ -43,15 +52,6 @@ header[lang=en] {
     z-index: 1;
     color: var(--base);
     font-weight: 800;
-}
-
-header[lang=zh] .emphasis {
-    position: relative;
-    display: inline-block;
-    z-index: 1;
-    color: var(--base);
-    font-weight: 800;
-    margin: 0px 5px;
 }
 
 .emphasis::before {
