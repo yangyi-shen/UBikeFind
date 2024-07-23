@@ -4,4 +4,4 @@
 
 **Solution:** Determine bike availability with the official UBike API from the Kaohsiung government, and display it on a website I can check before I leave the house.
 
-<add technologies used section later>
+Made with Leaflet.js and the Kaohsiung government UBike API
