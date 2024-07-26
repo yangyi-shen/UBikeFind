@@ -43,7 +43,7 @@ const stationList = await getStations();
 for (const station of stationList) {
     // create custom icon
     var customIcon = L.icon({
-        iconUrl: createIcon(station.yb2, station.eyb),
+        iconUrl: createIcon(station.yb2 + station.eyb),
         iconSize: [40, 40],
         iconAnchor: [20, 40],
         popupAnchor: [0, -40]
@@ -93,14 +93,14 @@ function haversine(userCoords, locationCoords) {
     return R * c; // distance in km
 }
 
-function createIcon(yb2, eyb) {
+function createIcon(total) {
     var canvas = document.createElement('canvas');
-    canvas.width = 60;
-    canvas.height = 40;
+    canvas.width = 100;
+    canvas.height = 67; // Adjusted height to maintain aspect ratio
     var ctx = canvas.getContext('2d');
 
     // fill color based on bike availability
-    if (yb2 + eyb < 5) {
+    if (total < 5) {
         ctx.fillStyle = '#f87171'
     } else {
         ctx.fillStyle = '#a3e635'
@@ -109,28 +109,28 @@ function createIcon(yb2, eyb) {
     // Draw the main body of the popup
     ctx.beginPath();
     ctx.moveTo(0, 0);
-    ctx.lineTo(60, 0);
-    ctx.lineTo(60, 25);
-    ctx.lineTo(35, 25);
-    ctx.lineTo(30, 35);
-    ctx.lineTo(25, 25);
-    ctx.lineTo(0, 25);
+    ctx.lineTo(100, 0);
+    ctx.lineTo(100, 42); // Adjusted height
+    ctx.lineTo(58, 42); // Adjusted x-coordinate
+    ctx.lineTo(50, 58); // Adjusted coordinates for the pointer
+    ctx.lineTo(42, 42); // Adjusted x-coordinate
+    ctx.lineTo(0, 42); // Adjusted height
     ctx.closePath();
     ctx.fill();
 
     // Draw a border
     ctx.strokeStyle = 'black';
-    ctx.lineWidth = 1;
+    ctx.lineWidth = 2; // Increased line width for better visibility
     ctx.stroke();
 
     // Add number
-    ctx.scale(1.60, 1);
-    ctx.translate(-11, -0.95);
+    ctx.scale(2.67, 1.67); // Adjusted scale factor
+    ctx.translate(-11.5, 0); // Adjusted translation
     ctx.font = 'bold 16px Arial';
     ctx.fillStyle = 'black';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(`${yb2}|${eyb}`, 30, 15);
+    ctx.fillText(total, 30, 15);
 
     // Convert to image URL
     return canvas.toDataURL();
