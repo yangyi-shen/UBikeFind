@@ -130,7 +130,7 @@ function createIcon(total) {
     ctx.fillStyle = 'black';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(total, 30, 15);
+    ctx.fillText(`${total}車`, 30, 15);
 
     // Convert to image URL
     return canvas.toDataURL();
